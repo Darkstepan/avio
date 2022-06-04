@@ -26,7 +26,7 @@ class MarketOrder(Exportable):
 
 @dataclass(repr=True, eq=True)
 class MarketListing(Exportable):
-    """WARNING: DO NOT INSTANTIATE DIRECTLY, USE dacite.from_dict()"""
+    """WARNING: DO NOT INSTANTIATE DIRECTLY, USE create_market_listing OR dacite.from_dict()"""
     buy_best: Optional[float]
     sell_best: Optional[float]
     buy_volume: Optional[int]
@@ -37,7 +37,7 @@ class MarketListing(Exportable):
 
 @dataclass(repr=True, eq=True)
 class MarketScan(Exportable):
-    """WARNING: DO NOT INSTANTIATE DIRECTLY, USE dacite.from_dict()"""
+    """WARNING: DO NOT INSTANTIATE DIRECTLY, USE create_market_scan OR dacite.from_dict()"""
     scan_id: int
     scan_time: int
     listings: list[MarketListing]
