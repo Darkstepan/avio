@@ -1,7 +1,7 @@
 # AVio
 ## About
 
-Dataclass based Vio API wrapper for Python. Supports both asynchronous(currently preferred) and synchronous interface.
+A dataclass based Vio API wrapper for Python. Supports both asynchronous(currently preferred) and synchronous interface.
 
 ## Instalation
 
