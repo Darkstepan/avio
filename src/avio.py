@@ -15,6 +15,9 @@ class Client:
 
         self._web = httpx.AsyncClient(headers={"X-API-KEY": self._key}, base_url=BASE_URI)
 
+        self.sync_get_current_scan = sync(self.get_current_scan)
+        self.sync_get_scan_by_id = sync(self.get_scan_by_id)
+
     async def _req(self, *args):
         async with self._ratelimiter:
             res = await self._web.get(*args)
@@ -38,6 +41,3 @@ class Client:
         res = await self._req(f"/market/{scan_id}")
         print(res)
         return create_market_scan(parse_scan(res))
-
-    sync_get_current_scan = sync(get_current_scan)
-    sync_get_scan_by_id = sync(get_scan_by_id)
