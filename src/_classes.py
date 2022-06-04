@@ -1,10 +1,9 @@
 from __future__ import annotations
-
 import json
-
 import dacite
 from ._response_parser import *
 from dataclasses import dataclass, asdict, astuple
+
 
 @dataclass()
 class Exportable:
@@ -17,11 +16,13 @@ class Exportable:
     def as_json(self):
         return json.dumps(self.asdict())
 
+
 @dataclass(repr=True, eq=True)
 class MarketOrder(Exportable):
     price: float
     quantity: int
     vendor_id: int
+
 
 @dataclass(repr=True, eq=True)
 class MarketListing(Exportable):
