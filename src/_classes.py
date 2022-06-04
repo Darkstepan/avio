@@ -1,17 +1,30 @@
 from __future__ import annotations
+
+import json
+
 import dacite
 from ._response_parser import *
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict, astuple
+
+@dataclass()
+class Exportable:
+    def asdict(self):
+        return asdict(self)
+
+    def astuple(self):
+        return astuple(self)
+
+    def as_json(self):
+        return json.dumps(self.asdict())
 
 @dataclass(repr=True, eq=True)
-class MarketOrder:
+class MarketOrder(Exportable):
     price: float
     quantity: int
     vendor_id: int
 
-
 @dataclass(repr=True, eq=True)
-class MarketListing:
+class MarketListing(Exportable):
     """WARNING: DO NOT INSTANTIATE DIRECTLY, USE dacite.from_dict()"""
     buy_best: Optional[float]
     sell_best: Optional[float]
@@ -22,7 +35,7 @@ class MarketListing:
 
 
 @dataclass(repr=True, eq=True)
-class MarketScan:
+class MarketScan(Exportable):
     """WARNING: DO NOT INSTANTIATE DIRECTLY, USE dacite.from_dict()"""
     scan_id: int
     scan_time: int
