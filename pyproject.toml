@@ -1,0 +1,19 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "avio"
+authors = [{name = "Darkstepan"}]
+version = "0.1.0"
+dependencies = ["httpx", "aiolimiter", "syncer", "dacite"]
+readme = "README.md"
+license = {file = "LICENSE"}
+classifiers = ["License :: OSI Approved :: MIT License"]
+description = ""
+
+[project.urls]
+Source = "https://github.com/Darkstepan/src"
+
+[tool.hatch.version]
+path = "__about__.py"
