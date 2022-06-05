@@ -13,7 +13,7 @@ class Exportable:
     def astuple(self):
         return astuple(self)
 
-    def as_json(self):
+    def asjson(self):
         return json.dumps(self.asdict())
 
 
