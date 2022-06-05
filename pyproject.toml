@@ -5,15 +5,16 @@ build-backend = "hatchling.build"
 [project]
 name = "avio"
 authors = [{name = "Darkstepan"}]
-version = "0.1.0"
+version = "0.1.9"
 dependencies = ["httpx", "aiolimiter", "syncer", "dacite"]
 readme = "README.md"
 license = {file = "LICENSE"}
 classifiers = ["License :: OSI Approved :: MIT License"]
 description = ""
+homepage = "https://github.com/Darkstepan/avio"
 
 [project.urls]
-Source = "https://github.com/Darkstepan/src"
+Source = "https://github.com/Darkstepan/avio"
 
 [tool.hatch.version]
 path = "__about__.py"
