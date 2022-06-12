@@ -44,8 +44,8 @@ def parse_listings(data: dict) -> Tuple[List, dict]:
 def parse_scan(data):
     result = dict()
     result["scan_id"] = _g(data, "_id")
-    result["scan_time"] = _g(data, "scInfo.capturedTime")
-    result["listings"] = _g(data, "marketInfo")
+    result["scan_time"] = _g(data, "data.scInfo.capturedTime")
+    result["listings"] = _g(data, "data.marketInfo")
     (result["listings"], result["listings_index"]) = parse_listings(result["listings"])
 
     return result
