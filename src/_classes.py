@@ -1,8 +1,9 @@
 from __future__ import annotations
 import json
+import time
 import dacite
 from ._response_parser import *
-from dataclasses import dataclass, asdict, astuple
+from dataclasses import dataclass, asdict, astuple, field
 
 
 @dataclass()
@@ -38,10 +39,10 @@ class MarketListing(Exportable):
 @dataclass(repr=True, eq=True)
 class MarketScan(Exportable):
     """WARNING: DO NOT INSTANTIATE DIRECTLY, USE create_market_scan OR dacite.from_dict()"""
-    scan_id: int
-    scan_time: int
+    scan_id: Optional[int]
     listings: list[MarketListing]
     listings_index: dict
+    scan_time: int = field(default_factory=lambda: round(time.time()))
 
     def get_listing(self, name):
         return self.listings[self.listings_index[name]]

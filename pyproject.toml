@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "avio"
 authors = [{name = "Darkstepan"}]
-version = "0.2.0"
+version = "0.2.1"
 dependencies = ["importlib_metadata", "toml", "httpx", "aiolimiter", "syncer", "dacite"]
 readme = "README.md"
 license = {file = "LICENSE"}
