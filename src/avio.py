@@ -1,4 +1,5 @@
 from __future__ import annotations
+import asyncio
 import httpx
 from aiolimiter import AsyncLimiter
 from syncer import sync
@@ -23,13 +24,16 @@ class Client:
         self._web = httpx.AsyncClient(headers={"X-API-KEY": self._key}, base_url=BASE_URI)
 
     async def _req(self, *args):
-        async with self._ratelimiter:
-            res = await self._web.get(*args)
+        try:
+            async with self._ratelimiter:
+                res = await self._web.get(*args)
 
-        if res.is_success:
-            return res.json()
-        else:
-            raise ConnectionError(f"Request failed, status_code=f{res.status_code}")
+            if res.is_success:
+                return res.json()
+            else:
+                raise ConnectionError(f"Request failed, status_code=f{res.status_code}")
+        except TimeoutError or httpx.TimeoutException or asyncio.TimeoutError:
+            raise TimeoutError("Connection timed out, Vio API is unreachable")
 
     async def async_get_current_scan(self) -> MarketScan:
         """Asynchronously fetches current market scan"""
