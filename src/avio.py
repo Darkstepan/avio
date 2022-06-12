@@ -1,11 +1,15 @@
 from __future__ import annotations
 import asyncio
+import json
+
 import httpx
+import websockets
 from aiolimiter import AsyncLimiter
 from syncer import sync
 from ._classes import *
 
-BASE_URI = "http://adv.vi-o.tech/api"
+API_URI = "http://adv.vi-o.tech/api"
+WS_URI = "ws://adv.vi-o.tech/ws"
 DEFAULT_RATELIMIT = lambda: AsyncLimiter(60)
 
 
@@ -21,7 +25,7 @@ class Client:
         self._key = key
         self._ratelimiter = ratelimiter or DEFAULT_RATELIMIT()
 
-        self._web = httpx.AsyncClient(headers={"X-API-KEY": self._key}, base_url=BASE_URI)
+        self._web = httpx.AsyncClient(headers={"X-API-KEY": self._key}, base_url=API_URI)
 
     async def _req(self, *args):
         try:
@@ -59,3 +63,41 @@ class Client:
         """Fetches old market scan by its id
         :param scan_id: scan_id to fetch"""
         pass
+
+
+class WebsocketsClient:
+    def __init__(self, key: str):
+        self._key = key
+        self._connection = None
+        self._listening_lock = asyncio.Lock()
+        self.sync_callbacks = []
+        self.async_callbacks = []
+
+    def add_sync_callback(self, f):
+        self.sync_callbacks.append(f)
+
+    def add_async_callback(self, f):
+        self.async_callbacks.append(f)
+
+    async def listen(self):
+        if self._listening_lock.locked():
+            raise Exception("Already listening!")
+
+        async with self._listening_lock:
+            self._connection = await websockets.connect(WS_URI, extra_headers={"X-API-KEY": self._key})
+            while True:
+                res = await self._connection.recv()
+                res = json.loads(res)
+
+                if not res["Rtype"] == "Update":
+                    continue
+
+                current_scan = create_market_scan(parse_scan(res["DataType"]))
+
+                for callback in self.sync_callbacks:
+                    callback(current_scan)
+
+                await asyncio.gather(*[async_callback(current_scan) for async_callback in self.async_callbacks])
+
+    def run(self):
+        asyncio.run(self.listen())
