@@ -50,7 +50,6 @@ class Client:
         :param scan_id: scan_id to fetch"""
 
         res = await self._req(f"/market/{scan_id}")
-        print(res)
         return create_market_scan(parse_scan(res))
 
     @replace_with(sync(async_get_current_scan))
